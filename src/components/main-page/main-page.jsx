@@ -1,7 +1,15 @@
+import { useEffect } from "react";
 import Arrow from "../../assets/arrow.svg";
+import { useProduct } from "../../store/product-slice.ts/products-slice";
 import Header from "../header/header";
+import { Link } from "react-router-dom";
 
 const MainPage = () => {
+  const { product, getAllProducrs, isfetch } = useProduct();
+
+  useEffect(() => {
+    getAllProducrs();
+  }, [getAllProducrs]);
   return (
     <>
       <Header />
@@ -16,30 +24,40 @@ const MainPage = () => {
           <h1 className="text-[36px] font-bold">New arrivals</h1>
           <img src={Arrow} alt="no" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center items-center gap-x-[30px] gap-y-[21px] mb-[130px] ">
-          {Array(8)
-            .fill()
-            .map((_, index) => (
-              <div key={index} className=" h-[332px] rounded-[10px] ">
-                <img
-                  className="w-full h-[280px] "
-                  src="https://storage.fabrikamaek.ru/images/0/3/3766/3766577/previews/people_1_man_trousers_front_black_500.jpg"
-                  alt="no"
-                />
+        {isfetch ? (
+          <div className="text-[56px] font-black font-poppins text-center ">
+            loading...
+          </div>
+        ) : product.lenght === 0 ?(
+          <div className="w-full h-auto text-[43px] font-bold ">
+            Преддложение отсутствуют 🤷‍♂️
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center items-center gap-x-[30px] gap-y-[21px] mb-[130px] ">
+            {product.map((item, index) => (
+              <Link
+                to={`/productPage/${item.id}`}
+                key={index}
+                className=" h-[332px] rounded-[10px] "
+              >
+                <img className="w-full h-[280px] " src={item?.image} alt="no" />
                 <div className="flex justify-between pl-[11px] items-center">
                   <div>
-                    <h4 className="text-[18px] font-bold ">Uni pants</h4>
+                    <h4 className="text-[18px] font-bold  font-nunito">
+                      {item?.name}
+                    </h4>
                     <h4 className="text-[#848484] text-[15px] font-bold ">
                       men pants
                     </h4>
                   </div>
                   <div>
-                    <h4 className="text-[16px] font-bold ">3000</h4>
+                    <h4 className="text-[16px] font-bold ">{item?.price} $</h4>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </>
   );

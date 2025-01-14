@@ -1,7 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Icon from "../../assets/iconRegistr.svg";
 import Header from "../header/header";
+import { useState } from "react";
+import { useRegistr } from "../../store/auth-slice/auth-slice";
+import { toast } from "react-toastify";
 const Login = () => {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const nav = useNavigate()
+  const {isFetch,loginUser} = useRegistr()
+
+  const onHandleSubmit = (e) => {
+    e.preventDefault();
+    if (password && email) {
+      loginUser(email,password)
+      setEmail('')
+      setPassword('')
+      nav('/')
+      toast('Вы успкшно вошли 👍')
+    }
+    console.log('error');
+  }
+
   return (
     <>
       <Header />
@@ -17,12 +37,15 @@ const Login = () => {
             <h1 className="text-[30px] font-bold mt-0 md:mt-[91px] mb-[25px] md:mb-[52px] ">
               Sign in
             </h1>
-            <form action="" className="w-full flex flex-col md:items-center ">
+            <form onSubmit={onHandleSubmit} action="" className="w-full flex flex-col md:items-center ">
               <div className="flex flex-col gap-y-[6px] mb-[21px] ">
                 <label className="text-[14px] font-normal " htmlFor="">
                   Email address
                 </label>
                 <input
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] text-[#00000080] border pl-[16px] "
                   type="email"
                   placeholder="Your email"
@@ -33,16 +56,22 @@ const Login = () => {
                   Password
                 </label>
                 <input
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] text-[#00000080] border pl-[16px] "
                   type="password"
                   placeholder="repeat password"
                 />
               </div>
-              <button className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] font-semibold text-white bg-black  ">
+              <button disabled={isFetch} className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] font-semibold text-white bg-black  ">
                 Log in
               </button>
             </form>
-            <Link to={"/registr"} className="text-[14px] mt-[52px] mb-[80px] md:mb-[169px] ">
+            <Link
+              to={"/registr"}
+              className="text-[14px] mt-[52px] mb-[80px] md:mb-[169px] "
+            >
               Don’t have an account?
               <span className=" font-bold "> Sign up</span>
             </Link>

@@ -1,7 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Icon from "../../assets/iconRegistr.svg";
 import Header from "../header/header";
+import { useState } from "react";
+import { useRegistr } from "../../store/auth-slice/auth-slice";
 const Registr = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordTwo, setPasswordTwo] = useState("");
+  const navigate = useNavigate()
+
+  const { isFetch, registrUser} = useRegistr()
+  const onHandleSubmit = (e) => {
+    e.preventDefault();
+    if (password === passwordTwo) {
+       registrUser(email,password)
+       setEmail('')
+       setPassword('')
+       setPasswordTwo('')
+       navigate('/')
+    }
+    console.log('error');
+    navigate('registr')
+  }
   return (
     <>
       <Header />
@@ -17,12 +37,15 @@ const Registr = () => {
             <h1 className="text-[30px] font-bold mt-0 md:mt-[91px] mb-[25px] md:mb-[52px] ">
               Create account
             </h1>
-            <form action="" className="w-full flex flex-col md:items-center  ">
+            <form onSubmit={onHandleSubmit} action="" className="w-full flex flex-col md:items-center  ">
               <div className="flex flex-col gap-y-[6px] mb-[21px] ">
                 <label className="text-[14px] font-normal " htmlFor="">
                   Email address
                 </label>
                 <input
+                  value={email}
+                  autoComplete="username"
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] text-[#00000080] border pl-[16px] "
                   type="email"
@@ -34,6 +57,9 @@ const Registr = () => {
                   Create a password
                 </label>
                 <input
+                  value={password}
+                  autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] text-[#00000080] border pl-[16px] "
                   type="password"
@@ -45,12 +71,15 @@ const Registr = () => {
                   Confirm password
                 </label>
                 <input
+                  value={passwordTwo}
+                  autoComplete="new-password"
+                  onChange={(e) => setPasswordTwo(e.target.value)}
                   className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] text-[#00000080] border pl-[16px] "
                   type="password"
                   placeholder="repeat password"
                 />
               </div>
-              <button className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] font-semibold text-white bg-black  ">
+              <button disabled={isFetch} className="w-full md:w-[353px] h-[56px] rounded-[10px] text-[16px] font-semibold text-white bg-black  ">
                 Create account
               </button>
             </form>
