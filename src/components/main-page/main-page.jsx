@@ -5,20 +5,32 @@ import Header from "../header/header";
 import { Link } from "react-router-dom";
 
 const MainPage = () => {
-  const { product, getAllProducrs, isfetch } = useProduct();
+  const {
+    product,
+    getAllProducrs,
+    isfetch,
+    getAllCategory,
+    category,
+    currentCategory,
+    setCurrentCategory,
+  } = useProduct();
 
   useEffect(() => {
-    getAllProducrs();
-  }, [getAllProducrs]);
+    getAllProducrs(currentCategory);
+  }, [getAllProducrs, currentCategory]);
+  useEffect(() => {
+    getAllCategory();
+  },[getAllCategory])
   return (
     <>
       <Header />
       <div className="max-w-[1220px] mx-auto pl-[25px] pr-[25px]">
         <div className="flex gap-x-[21px] mb-[38px] mt-[49px] ">
-          <h3 className="text-[20px] font-bold ">Новое</h3>
-          <h3 className="text-[20px] font-bold ">Худи</h3>
-          <h3 className="text-[20px] font-bold ">Зип-худи</h3>
-          <h3 className="text-[20px] font-bold ">Штаны</h3>
+          { category.map((item, index) => (
+            <div key={index}>
+              <h3 onClick={() => setCurrentCategory(item)} className="text-[20px] font-bold ">{item}</h3>
+            </div>
+          ))}
         </div>
         <div className="mb-[26px] flex gap-x-[14px]">
           <h1 className="text-[36px] font-bold">New arrivals</h1>
@@ -28,7 +40,7 @@ const MainPage = () => {
           <div className="text-[56px] font-black font-poppins text-center ">
             loading...
           </div>
-        ) : product.lenght === 0 ?(
+        ) : product.length === 0 ? (
           <div className="w-full h-auto text-[43px] font-bold ">
             Преддложение отсутствуют 🤷‍♂️
           </div>
@@ -47,7 +59,7 @@ const MainPage = () => {
                       {item?.name}
                     </h4>
                     <h4 className="text-[#848484] text-[15px] font-bold ">
-                      men pants
+                      {item?.subtitle}
                     </h4>
                   </div>
                   <div>

@@ -41,16 +41,15 @@ const ProductPage = () => {
             modules={[FreeMode, Navigation, Thumbs]}
             className="mySwiper2"
           >
-            {Array(8)
-              .fill()
-              .map((_, index) => (
+            {defineProducts?.images?.length > 0 ? (
+              defineProducts.images.map((item, index) => (
                 <SwiperSlide key={index}>
-                  <img
-                    className="h-[563px] w-[85%] mx-auto  "
-                    src={defineProducts?.image}
-                  />
+                  <img src={item?.img} alt='no img' />
                 </SwiperSlide>
-              ))}
+              ))
+            ) : (
+              <h2>No images</h2>
+            )}
           </Swiper>
           <Swiper
             style={{
@@ -65,18 +64,22 @@ const ProductPage = () => {
             modules={[FreeMode, Navigation, Thumbs]}
             className="mySwiper"
           >
-            {Array(8)
-              .fill()
-              .map((_, index) => (
+            {defineProducts?.images?.length > 0 ? (
+              defineProducts.images.map((item, index) => (
                 <SwiperSlide key={index}>
-                  <img src={defineProducts?.image} />
+                  <img src={item?.img} alt='no img' />
                 </SwiperSlide>
-              ))}
+              ))
+            ) : (
+              <h2>No images</h2>
+            )}
           </Swiper>
         </div>
         <div className="flex flex-col ">
           <div className="flex flex-col gap-y-[10px] ">
-            <h2 className="text-[20px] text-[#616161] font-bold ">{defineProducts?.subtitle}</h2>
+            <h2 className="text-[20px] text-[#616161] font-bold ">
+              {defineProducts?.subtitle}
+            </h2>
             <h3 className="text-[48px] font-nunito">{defineProducts?.name}</h3>
             <h2 className="text-[24px] font-bold ">
               {defineProducts?.price} $
@@ -88,7 +91,12 @@ const ProductPage = () => {
               {defineProducts?.sizes?.map((item, index) => (
                 <button
                   key={index}
-                  className="w-[53px] h-[52px] text-[32px]  font-semibold transform hover:bg-black hover:text-white transition-colors duration-300 rounded-[8px] "
+                  className={`w-[53px] h-[52px] text-[32px] font-semibold transform transition-colors duration-300 rounded-[8px] ${
+                    item?.isActive
+                      ? "hover:bg-black hover:text-white bg-gray-200 text-gray-700"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                  disabled={!item?.isActive}
                 >
                   {item?.value}
                 </button>
