@@ -3,32 +3,43 @@ import Arrow from "../../assets/arrow.svg";
 import { useProduct } from "../../store/product-slice.ts/products-slice";
 import Header from "../header/header";
 import { Link } from "react-router-dom";
+import { useCategoty } from "../../store/category-store/category-store";
+import { motion } from "motion/react";
 
 const MainPage = () => {
-  const {
-    product,
-    getAllProducrs,
-    isfetch,
-    getAllCategory,
-    category,
-    currentCategory,
-    setCurrentCategory,
-  } = useProduct();
+  
+  const { product, getAllProducrs, isfetch } = useProduct();
+
+  const { currentCategory, category, setCurrentCategory, getAllCategory } = useCategoty();
 
   useEffect(() => {
     getAllProducrs(currentCategory);
   }, [getAllProducrs, currentCategory]);
+
   useEffect(() => {
     getAllCategory();
-  },[getAllCategory])
+  }, [getAllCategory]);
+
+  const variants = {
+    hidden: { opacity: 0 },
+    visible: (index) => ({
+      opacity: 1,
+      transition: { delay: index * 0.3 }
+    })
+  }
   return (
     <>
       <Header />
       <div className="max-w-[1220px] mx-auto pl-[25px] pr-[25px]">
         <div className="flex gap-x-[21px] mb-[38px] mt-[49px] ">
-          { category.map((item, index) => (
+          {category.map((item, index) => (
             <div key={index}>
-              <h3 onClick={() => setCurrentCategory(item)} className="text-[20px] font-bold ">{item}</h3>
+              <h3
+                onClick={() => setCurrentCategory(item)}
+                className="text-[20px] font-bold "
+              >
+                {item}
+              </h3>
             </div>
           ))}
         </div>
@@ -47,9 +58,10 @@ const MainPage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center items-center gap-x-[30px] gap-y-[21px] mb-[130px] ">
             {product.map((item, index) => (
-              <Link
+             <motion.div key={index} variants={variants} custom={index} initial={'hidden'} animate={'visible'}  >
+             <Link
                 to={`/productPage/${item.id}`}
-                key={index}
+                
                 className=" h-[332px] rounded-[10px] "
               >
                 <img className="w-full h-[280px] " src={item?.image} alt="no" />
@@ -67,6 +79,7 @@ const MainPage = () => {
                   </div>
                 </div>
               </Link>
+              </motion.div>
             ))}
           </div>
         )}

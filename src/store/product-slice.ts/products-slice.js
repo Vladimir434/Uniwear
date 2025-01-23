@@ -1,11 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase-config";
 import { create } from "zustand";
 import { toast } from "react-toastify";
@@ -13,17 +6,11 @@ import { toast } from "react-toastify";
 export const productsCollectionRef = collection(db, "products");
 
 export const categoriesCollectionRef = collection(db, "categories");
-export const categoryDoc = doc(categoriesCollectionRef, "category");
 
 export const useProduct = create((set) => ({
   product: [],
   isfetch: true,
-  category: [],
-  currentCategory: "",
 
-  setCurrentCategory(value) {
-    set({ currentCategory: value });
-  },
   async getAllProducrs(category) {
     try {
       set({ isfetch: true });
@@ -45,9 +32,5 @@ export const useProduct = create((set) => ({
       set({ isfetch: false });
     }
   },
-  async getAllCategory() {
-    const productSnap = await getDoc(categoryDoc);
-    set({ category: productSnap.data()?.category });
-    set({currentCategory:productSnap.data()?.category[0]})
-  },
+
 }));

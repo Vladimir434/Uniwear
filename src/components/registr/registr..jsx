@@ -3,24 +3,25 @@ import Icon from "../../assets/iconRegistr.svg";
 import Header from "../header/header";
 import { useState } from "react";
 import { useRegistr } from "../../store/auth-slice/auth-slice";
+import { toast } from "react-toastify";
 const Registr = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordTwo, setPasswordTwo] = useState("");
-  const navigate = useNavigate()
+  const nav = useNavigate()
 
   const { isFetch, registrUser} = useRegistr()
   const onHandleSubmit = (e) => {
     e.preventDefault();
     if (password === passwordTwo) {
-       registrUser(email,password)
+       registrUser(email,password,nav)
        setEmail('')
        setPassword('')
        setPasswordTwo('')
-       navigate('/')
+    } else {
+      console.log('error');
+      toast('Произошла ошибка!!!')
     }
-    console.log('error');
-    navigate('registr')
   }
   return (
     <>
